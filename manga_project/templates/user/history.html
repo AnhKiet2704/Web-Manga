@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Lịch sử đọc{% endblock %}
+
+{% block content %}
+<div class="history-page">
+    <h1>📚 Lịch sử đọc của bạn</h1>
+
+    {% if history %}
+    <div class="history-list">
+        {% for item in history %}
+        <div class="history-item">
+            <a href="/manga/{{ item.manga.slug }}/" class="history-cover">
+                <img src="{{ item.manga.cover_image.url }}" alt="{{ item.manga.title }}">
+            </a>
+
+            <div class="history-info">
+                <h3>
+                    <a href="/manga/{{ item.manga.slug }}/">{{ item.manga.title }}</a>
+                </h3>
+                <p class="history-chapter">
+                    Đọc đến:
+                    <a href="/manga/{{ item.manga.slug }}/{{ item.chapter.slug }}/">
+                        Chapter {{ item.chapter.chapter_number }}
+                    </a>
+                </p>
+                <p class="history-date">{{ item.last_read_at|date:"d/m/Y H:i" }}</p>
+            </div>
+
+            <div class="history-actions">
+                <a href="/manga/{{ item.manga.slug }}/{{ item.chapter.slug }}/" class="btn btn-primary">
+                    Đọc tiếp
+                </a>
+                <a href="/manga/{{ item.manga.slug }}/" class="btn btn-secondary">
+                    Xem truyện
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>Bạn chưa đọc truyện nào.</p>
+        <a href="/" class="btn btn-primary">Khám phá ngay</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.history-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.history-page h1 {
+    margin-bottom: 30px;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.history-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.history-cover {
+    flex-shrink: 0;
+}
+
+.history-cover img {
+    width: 80px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.history-info {
+    flex: 1;
+}
+
+.history-info h3 {
+    margin-bottom: 10px;
+}
+
+.history-info h3 a {
+    color: #333;
+}
+
+.history-chapter {
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.history-date {
+    color: #666;
+    font-size: 13px;
+}
+
+.history-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.empty-state {
+    background: white;
+    padding: 60px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .history-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .history-actions {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

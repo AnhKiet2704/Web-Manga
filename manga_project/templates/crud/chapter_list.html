@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Quản lý chapter - {{ manga.title }}{% endblock %}
+
+{% block content %}
+<div class="crud-container">
+    <div class="crud-header">
+        <div>
+            <a href="{% url 'crud_manga_list' %}" class="back-link">← Quay lại danh sách truyện</a>
+            <h1>📖 Quản lý chapter: {{ manga.title }}</h1>
+        </div>
+        <a href="{% url 'crud_chapter_create' manga.id %}" class="btn btn-success">➕ Thêm chapter mới</a>
+    </div>
+
+    <div class="manga-info-box">
+        <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+        <div>
+            <h3>{{ manga.title }}</h3>
+            <p>Tác giả: {{ manga.author.name }}</p>
+            <p>Tổng số chapter: {{ chapters.count }}</p>
+        </div>
+    </div>
+
+    <div class="crud-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Chapter</th>
+                    <th>Tiêu đề</th>
+                    <th>Số trang</th>
+                    <th>Lượt xem</th>
+                    <th>Ngày tạo</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chapter in chapters %}
+                <tr>
+                    <td><strong>Chapter {{ chapter.chapter_number }}</strong></td>
+                    <td>{{ chapter.title|default:"-" }}</td>
+                    <td>{{ chapter.images.count }} trang</td>
+                    <td>{{ chapter.views }}</td>
+                    <td>{{ chapter.created_at|date:"d/m/Y" }}</td>
+                    <td class="actions">
+                        <a href="/manga/{{ manga.slug }}/{{ chapter.slug }}/"
+                           class="btn-small btn-info"
+                           target="_blank"
+                           title="Xem chapter">
+                            👁️
+                        </a>
+                        <a href="{% url 'crud_chapter_update' chapter.id %}"
+                           class="btn-small btn-primary"
+                           title="Sửa">
+                            ✏️
+                        </a>
+                        <a href="{% url 'crud_chapter_delete' chapter.id %}"
+                           class="btn-small btn-danger"
+                           title="Xóa">
+                            🗑️
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">Chưa có chapter nào</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.back-link {
+    color: #007bff;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.manga-info-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.manga-info-box img {
+    width: 80px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.manga-info-box h3 {
+    margin-bottom: 10px;
+}
+
+.manga-info-box p {
+    color: #666;
+    margin: 5px 0;
+}
+</style>
+{% endblock %}

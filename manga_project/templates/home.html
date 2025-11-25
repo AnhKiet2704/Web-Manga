@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Trang chủ - Đọc truyện Manga{% endblock %}
+
+{% block content %}
+<div class="home-layout">
+    <!-- Main Content Area -->
+    <div class="main-area">
+        <!-- Banner -->
+        <section class="banner">
+            <div class="banner-slide">
+                <h2>Chào mừng đến với Manga Website</h2>
+                <p>Đọc truyện tranh miễn phí, cập nhật liên tục</p>
+            </div>
+        </section>
+
+        <!-- Truyện mới cập nhật -->
+        <section class="manga-section">
+            <div class="section-header">
+                <h2>📚 Truyện mới cập nhật</h2>
+                <a href="/search/" class="view-all">Xem tất cả →</a>
+            </div>
+
+            <div class="manga-grid">
+                {% for manga in latest_manga %}
+                <div class="manga-card">
+                    <a href="/manga/{{ manga.slug }}/">
+                        <div class="manga-cover">
+                            <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+                            <div class="manga-overlay">
+                                <span class="views">👁 {{ manga.views }}</span>
+                            </div>
+                        </div>
+                        <div class="manga-info">
+                            <h3 class="manga-title">{{ manga.title }}</h3>
+                            <p class="manga-chapters">
+                                {% with latest=manga.get_latest_chapters %}
+                                    {% if latest %}
+                                        Chapter {{ latest.0.chapter_number }}
+                                    {% endif %}
+                                {% endwith %}
+                            </p>
+                            <p class="manga-updated">{{ manga.updated_at|date:"d/m/Y" }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Top Trending -->
+        <section class="manga-section">
+            <div class="section-header">
+                <h2>🔥 Top Trending</h2>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="today">Hôm nay</button>
+                <button class="tab-btn" data-tab="week">Tuần này</button>
+                <button class="tab-btn" data-tab="month">Tháng này</button>
+            </div>
+
+            <div class="tab-content active" id="today">
+                <div class="top-list">
+                    {% for manga in top_today %}
+                    <div class="top-item">
+                        <span class="top-rank">{{ forloop.counter }}</span>
+                        <a href="/manga/{{ manga.slug }}/">
+                            <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+                        </a>
+                        <div class="top-info">
+                            <a href="/manga/{{ manga.slug }}/">
+                                <h4>{{ manga.title }}</h4>
+                            </a>
+                            <p>👁 {{ manga.views }} lượt xem</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="tab-content" id="week">
+                <div class="top-list">
+                    {% for manga in top_week %}
+                    <div class="top-item">
+                        <span class="top-rank">{{ forloop.counter }}</span>
+                        <a href="/manga/{{ manga.slug }}/">
+                            <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+                        </a>
+                        <div class="top-info">
+                            <a href="/manga/{{ manga.slug }}/">
+                                <h4>{{ manga.title }}</h4>
+                            </a>
+                            <p>👁 {{ manga.views }} lượt xem</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="tab-content" id="month">
+                <div class="top-list">
+                    {% for manga in top_month %}
+                    <div class="top-item">
+                        <span class="top-rank">{{ forloop.counter }}</span>
+                        <a href="/manga/{{ manga.slug }}/">
+                            <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+                        </a>
+                        <div class="top-info">
+                            <a href="/manga/{{ manga.slug }}/">
+                                <h4>{{ manga.title }}</h4>
+                            </a>
+                            <p>👁 {{ manga.views }} lượt xem</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3>📂 Thể loại</h3>
+            <div class="category-list">
+                {% for category in categories %}
+                <a href="/category/{{ category.slug }}/" class="category-item">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </aside>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Remove active class from all buttons and contents
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        // Add active class to clicked button and corresponding content
+        this.classList.add('active');
+        document.getElementById(this.dataset.tab).classList.add('active');
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ manga.title }} - Đọc truyện{% endblock %}
+
+{% block content %}
+<div class="manga-detail">
+    <div class="manga-info-section">
+        <div class="manga-cover-large">
+            <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+        </div>
+
+        <div class="manga-details">
+            <h1 class="manga-title-large">{{ manga.title }}</h1>
+
+            {% if manga.alternative_title %}
+            <p class="alt-title">{{ manga.alternative_title }}</p>
+            {% endif %}
+
+            <div class="manga-meta">
+                <div class="meta-item">
+                    <span class="label">Tác giả:</span>
+                    <span class="value">{{ manga.author.name }}</span>
+                </div>
+
+                <div class="meta-item">
+                    <span class="label">Trạng thái:</span>
+                    <span class="value status-{{ manga.status }}">{{ manga.get_status_display }}</span>
+                </div>
+
+                <div class="meta-item">
+                    <span class="label">Lượt xem:</span>
+                    <span class="value">👁 {{ manga.views }}</span>
+                </div>
+
+                <div class="meta-item">
+                    <span class="label">Đánh giá:</span>
+                    <span class="value">⭐ {{ avg_rating }}/10</span>
+                </div>
+            </div>
+
+            <div class="manga-categories">
+                <span class="label">Thể loại:</span>
+                {% for category in manga.categories.all %}
+                <a href="/category/{{ category.slug }}/" class="category-tag">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <div class="manga-actions">
+                <form action="/follow/{{ manga.id }}/" method="post">
+                    {% csrf_token %}
+                    {% if is_following %}
+                    <button type="submit" class="btn btn-secondary">❌ Bỏ theo dõi</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary">❤️ Theo dõi</button>
+                    {% endif %}
+                </form>
+
+                {% if chapters %}
+                <a href="/manga/{{ manga.slug }}/{{ chapters.0.slug }}/" class="btn btn-success">
+                    📖 Đọc ngay
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Rating -->
+            {% if user.is_authenticated %}
+            <div class="rating-section">
+                <h3>Đánh giá truyện này</h3>
+                <form action="/rate/{{ manga.id }}/" method="post" class="rating-form">
+                    {% csrf_token %}
+                    <div class="star-rating">
+                        {% for i in "12345678910" %}
+                        <input type="radio" name="score" value="{{ forloop.counter }}" id="star{{ forloop.counter }}">
+                        <label for="star{{ forloop.counter }}">{{ forloop.counter }}</label>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-small">Gửi đánh giá</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="manga-description">
+        <h2>Nội dung</h2>
+        <p>{{ manga.description|linebreaks }}</p>
+    </div>
+
+    <div class="chapter-list-section">
+        <h2>Danh sách chương</h2>
+        <div class="chapter-list">
+            {% for chapter in chapters %}
+            <div class="chapter-item">
+                <a href="/manga/{{ manga.slug }}/{{ chapter.slug }}/">
+                    <span class="chapter-name">
+                        Chapter {{ chapter.chapter_number }}
+                        {% if chapter.title %} - {{ chapter.title }}{% endif %}
+                    </span>
+                    <span class="chapter-meta">
+                        <span class="chapter-views">👁 {{ chapter.views }}</span>
+                        <span class="chapter-date">{{ chapter.created_at|date:"d/m/Y" }}</span>
+                    </span>
+                </a>
+            </div>
+            {% empty %}
+            <p>Chưa có chapter nào.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="comments-section">
+        <h2>Bình luận</h2>
+
+        {% if user.is_authenticated %}
+        <form action="/comment/{{ manga.id }}/" method="post" class="comment-form">
+            {% csrf_token %}
+            <textarea name="content" placeholder="Viết bình luận..." rows="4" required></textarea>
+            <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+        </form>
+        {% else %}
+        <p><a href="/auth/login/?next={{ request.path }}">Đăng nhập</a> để bình luận</p>
+        {% endif %}
+
+        <div class="comment-list">
+            {% for comment in comments %}
+            <div class="comment-item">
+                <div class="comment-header">
+                    <strong>{{ comment.user.username }}</strong>
+                    <span class="comment-date">{{ comment.created_at|date:"d/m/Y H:i" }}</span>
+                </div>
+                <div class="comment-content">
+                    {{ comment.content }}
+                </div>
+            </div>
+            {% empty %}
+            <p>Chưa có bình luận nào.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

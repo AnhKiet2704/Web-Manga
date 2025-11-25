@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Đang theo dõi{% endblock %}
+
+{% block content %}
+<div class="following-page">
+    <h1>❤️ Truyện đang theo dõi</h1>
+
+    {% if follows %}
+    <div class="manga-grid">
+        {% for follow in follows %}
+        <div class="manga-card">
+            <a href="/manga/{{ follow.manga.slug }}/">
+                <div class="manga-cover">
+                    <img src="{{ follow.manga.cover_image.url }}" alt="{{ follow.manga.title }}">
+                    <div class="manga-overlay">
+                        <span class="views">👁 {{ follow.manga.views }}</span>
+                        {% with latest=follow.manga.get_latest_chapters %}
+                        {% if latest %}
+                        <span class="new-chapter">New: Ch.{{ latest.0.chapter_number }}</span>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+                <div class="manga-info">
+                    <h3 class="manga-title">{{ follow.manga.title }}</h3>
+                    <p class="manga-updated">Cập nhật: {{ follow.manga.updated_at|date:"d/m/Y" }}</p>
+                    <p class="manga-followed">Theo dõi từ: {{ follow.created_at|date:"d/m/Y" }}</p>
+                </div>
+            </a>
+
+            <form action="/follow/{{ follow.manga.id }}/" method="post" class="unfollow-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-unfollow" title="Bỏ theo dõi">
+                    ❌
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>Bạn chưa theo dõi truyện nào.</p>
+        <a href="/" class="btn btn-primary">Khám phá ngay</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.following-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.following-page h1 {
+    margin-bottom: 30px;
+}
+
+.manga-card {
+    position: relative;
+}
+
+.unfollow-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.btn-unfollow {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-unfollow:hover {
+    background: #ff6b6b;
+    transform: scale(1.1);
+}
+
+.new-chapter {
+    background: #28a745;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+.manga-followed {
+    color: #999;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.empty-state {
+    background: white;
+    padding: 60px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 18px;
+}
+</style>
+{% endblock %}

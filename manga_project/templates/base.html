@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Manga Website{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="/">
+                        <h1>🎴 Manga Site</h1>
+                    </a>
+                </div>
+
+<nav class="main-nav">
+    <a href="/">Trang chủ</a>
+    <a href="/search/">Tìm kiếm</a>
+    {% if user.is_authenticated %}
+        {% if user.is_staff %}
+        <a href="/crud/manga/">⚙️ Quản lý</a>
+        {% endif %}
+        <a href="/user/following/">Theo dõi</a>
+        <a href="/user/history/">Lịch sử</a>
+    {% endif %}
+</nav>
+
+
+                <div class="search-box">
+                    <form action="/search/" method="get">
+                        <input type="text" name="q" placeholder="Tìm truyện..." value="{{ query }}">
+                        <button type="submit">🔍</button>
+                    </form>
+                </div>
+
+                <div class="user-menu">
+                    {% if user.is_authenticated %}
+                        <span>Xin chào, {{ user.username }}</span>
+                        <a href="/user/profile/">Hồ sơ</a>
+                        <a href="/auth/logout/">Đăng xuất</a>
+                    {% else %}
+                        <a href="/auth/login/">Đăng nhập</a>
+                        <a href="/auth/register/">Đăng ký</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        <div class="container">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Manga Website. All rights reserved.</p>
+            <p>Thiết kế bởi Django + HTML/CSS thuần</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

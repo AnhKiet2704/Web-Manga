@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Tìm kiếm{% if query %}: {{ query }}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="search-page">
+    <div class="search-filters">
+        <h2>🔍 Tìm kiếm truyện</h2>
+
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label>Từ khóa:</label>
+                <input type="text" name="q" value="{{ query }}" placeholder="Nhập tên truyện, tác giả...">
+            </div>
+
+            <div class="filter-group">
+                <label>Thể loại:</label>
+                <select name="category">
+                    <option value="">Tất cả</option>
+                    {% for category in categories %}
+                    <option value="{{ category.slug }}"
+                            {% if category.slug == selected_category %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Trạng thái:</label>
+                <select name="status">
+                    <option value="">Tất cả</option>
+                    <option value="ongoing" {% if selected_status == 'ongoing' %}selected{% endif %}>
+                        Đang tiến hành
+                    </option>
+                    <option value="completed" {% if selected_status == 'completed' %}selected{% endif %}>
+                        Hoàn thành
+                    </option>
+                    <option value="hiatus" {% if selected_status == 'hiatus' %}selected{% endif %}>
+                        Tạm ngưng
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </form>
+    </div>
+
+    <div class="search-results">
+        {% if query %}
+        <p class="result-count">
+            Tìm thấy {{ mangas.paginator.count }} kết quả cho "{{ query }}"
+        </p>
+        {% endif %}
+
+        <div class="manga-grid">
+            {% for manga in mangas %}
+            <div class="manga-card">
+                <a href="/manga/{{ manga.slug }}/">
+                    <div class="manga-cover">
+                        <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+                        <div class="manga-overlay">
+                            <span class="views">👁 {{ manga.views }}</span>
+                        </div>
+                    </div>
+                    <div class="manga-info">
+                        <h3 class="manga-title">{{ manga.title }}</h3>
+                        <p class="manga-author">{{ manga.author.name }}</p>
+                        <p class="manga-updated">{{ manga.updated_at|date:"d/m/Y" }}</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <p class="no-results">Không tìm thấy truyện nào.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if mangas.has_other_pages %}
+        <div class="pagination">
+            {% if mangas.has_previous %}
+            <a href="?page={{ mangas.previous_page_number }}&q={{ query }}&category={{ selected_category }}&status={{ selected_status }}"
+               class="page-link">← Trước</a>
+            {% endif %}
+
+            <span class="page-current">
+                Trang {{ mangas.number }} / {{ mangas.paginator.num_pages }}
+            </span>
+
+            {% if mangas.has_next %}
+            <a href="?page={{ mangas.next_page_number }}&q={{ query }}&category={{ selected_category }}&status={{ selected_status }}"
+               class="page-link">Sau →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.search-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.search-filters {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.result-count {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.page-link {
+    padding: 8px 15px;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+.page-current {
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

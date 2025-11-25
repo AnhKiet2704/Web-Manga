@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Hồ sơ - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
+            {% else %}
+            <div class="avatar-placeholder">{{ user.username.0|upper }}</div>
+            {% endif %}
+        </div>
+
+        <div class="profile-info">
+            <h1>{{ user.username }}</h1>
+            <p class="profile-email">{{ user.email }}</p>
+            <p class="profile-joined">Tham gia: {{ user.date_joined|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+
+    <div class="profile-stats">
+        <div class="stat-item">
+            <span class="stat-number">{{ user.follows.count }}</span>
+            <span class="stat-label">Đang theo dõi</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ user.reading_history.count }}</span>
+            <span class="stat-label">Đã đọc</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ user.comment_set.count }}</span>
+            <span class="stat-label">Bình luận</span>
+        </div>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-section">
+            <h2>Giới thiệu</h2>
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="bio" rows="5" placeholder="Viết gì đó về bạn...">{{ user.profile.bio }}</textarea>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </form>
+        </div>
+
+        <div class="profile-section">
+            <h2>Liên kết nhanh</h2>
+            <div class="quick-links">
+                <a href="/user/history/" class="quick-link">
+                    📚 Lịch sử đọc
+                </a>
+                <a href="/user/following/" class="quick-link">
+                    ❤️ Đang theo dõi
+                </a>
+                <a href="/auth/logout/" class="quick-link">
+                    🚪 Đăng xuất
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.profile-avatar img,
+.avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.profile-info h1 {
+    margin-bottom: 10px;
+}
+
+.profile-email,
+.profile-joined {
+    color: #666;
+    font-size: 14px;
+}
+
+.profile-stats {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 14px;
+}
+
+.profile-content {
+    display: grid;
+    gap: 20px;
+}
+
+.profile-section {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.profile-section h2 {
+    margin-bottom: 20px;
+}
+
+.profile-section textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quick-link {
+    display: block;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    color: #333;
+    transition: background 0.3s;
+}
+
+.quick-link:hover {
+    background: #e9ecef;
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ manga.title }} - Chapter {{ chapter.chapter_number }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/reader.css">
+{% endblock %}
+
+{% block content %}
+<div class="reader-container">
+    <!-- Reader Header -->
+    <div class="reader-header">
+        <div class="breadcrumb">
+            <a href="/">Trang chủ</a> /
+            <a href="/manga/{{ manga.slug }}/">{{ manga.title }}</a> /
+            <span>Chapter {{ chapter.chapter_number }}</span>
+        </div>
+
+        <h1 class="reader-title">
+            {{ manga.title }} - Chapter {{ chapter.chapter_number }}
+            {% if chapter.title %}: {{ chapter.title }}{% endif %}
+        </h1>
+    </div>
+
+    <!-- Reader Navigation -->
+    <div class="reader-nav">
+        <div class="nav-buttons">
+            {% if prev_chapter %}
+            <a href="/manga/{{ manga.slug }}/{{ prev_chapter.slug }}/" class="nav-btn prev-btn">
+                ← Chapter trước
+            </a>
+            {% else %}
+            <button class="nav-btn disabled" disabled>← Chapter trước</button>
+            {% endif %}
+
+            <div class="chapter-selector">
+                <select id="chapterSelect" onchange="window.location.href=this.value">
+                    {% for ch in all_chapters %}
+                    <option value="/manga/{{ manga.slug }}/{{ ch.slug }}/"
+                            {% if ch.id == chapter.id %}selected{% endif %}>
+                        Chapter {{ ch.chapter_number }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% if next_chapter %}
+            <a href="/manga/{{ manga.slug }}/{{ next_chapter.slug }}/" class="nav-btn next-btn">
+                Chapter tiếp →
+            </a>
+            {% else %}
+            <button class="nav-btn disabled" disabled>Chapter tiếp →</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Reader Content -->
+    <div class="reader-content">
+        {% for image in images %}
+        <div class="reader-page" data-page="{{ image.page_number }}">
+            <img src="{{ image.image.url }}"
+                 alt="Page {{ image.page_number }}"
+                 loading="lazy"
+                 class="reader-image">
+            <div class="page-number">{{ image.page_number }}/{{ images|length }}</div>
+        </div>
+        {% empty %}
+        <p>Chương này chưa có ảnh.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Reader Navigation Bottom -->
+    <div class="reader-nav bottom">
+        <div class="nav-buttons">
+            {% if prev_chapter %}
+            <a href="/manga/{{ manga.slug }}/{{ prev_chapter.slug }}/" class="nav-btn prev-btn">
+                ← Chapter trước
+            </a>
+            {% else %}
+            <button class="nav-btn disabled" disabled>← Chapter trước</button>
+            {% endif %}
+
+            <a href="/manga/{{ manga.slug }}/" class="nav-btn home-btn">
+                🏠 Về trang truyện
+            </a>
+
+            {% if next_chapter %}
+            <a href="/manga/{{ manga.slug }}/{{ next_chapter.slug }}/" class="nav-btn next-btn">
+                Chapter tiếp →
+            </a>
+            {% else %}
+            <button class="nav-btn disabled" disabled>Chapter tiếp →</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="reader-comments">
+        <h2>Bình luận Chapter {{ chapter.chapter_number }}</h2>
+
+        {% if user.is_authenticated %}
+        <form action="/comment/{{ manga.id }}/" method="post" class="comment-form">
+            {% csrf_token %}
+            <input type="hidden" name="chapter_id" value="{{ chapter.id }}">
+            <textarea name="content" placeholder="Viết bình luận..." rows="3" required></textarea>
+            <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+        </form>
+        {% else %}
+        <p><a href="/auth/login/?next={{ request.path }}">Đăng nhập</a> để bình luận</p>
+        {% endif %}
+
+        <div class="comment-list">
+            {% for comment in chapter.comments.all %}
+            <div class="comment-item">
+                <div class="comment-header">
+                    <strong>{{ comment.user.username }}</strong>
+                    <span class="comment-date">{{ comment.created_at|date:"d/m/Y H:i" }}</span>
+                </div>
+                <div class="comment-content">
+                    {{ comment.content }}
+                </div>
+            </div>
+            {% empty %}
+            <p>Chưa có bình luận nào cho chapter này.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') {
+        const prevBtn = document.querySelector('.prev-btn:not(.disabled)');
+        if (prevBtn) prevBtn.click();
+    } else if (e.key === 'ArrowRight') {
+        const nextBtn = document.querySelector('.next-btn:not(.disabled)');
+        if (nextBtn) nextBtn.click();
+    }
+});
+
+// Scroll to top when changing chapter
+window.addEventListener('load', function() {
+    window.scrollTo(0, 0);
+});
+
+// Lazy load images improvement
+const images = document.querySelectorAll('.reader-image');
+const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            img.classList.add('loaded');
+            observer.unobserve(img);
+        }
+    });
+});
+
+images.forEach(img => imageObserver.observe(img));
+</script>
+{% endblock %}

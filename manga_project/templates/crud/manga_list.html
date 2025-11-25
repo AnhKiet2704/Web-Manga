@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Quản lý truyện{% endblock %}
+
+{% block content %}
+<div class="crud-container">
+    <div class="crud-header">
+        <h1>📚 Quản lý truyện</h1>
+        <a href="{% url 'crud_manga_create' %}" class="btn btn-success">➕ Thêm truyện mới</a>
+    </div>
+
+    <div class="crud-nav">
+        <a href="{% url 'crud_manga_list' %}" class="active">Truyện</a>
+        <a href="{% url 'crud_category_list' %}">Thể loại</a>
+        <a href="{% url 'crud_author_list' %}">Tác giả</a>
+    </div>
+
+    <div class="crud-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ảnh bìa</th>
+                    <th>Tên truyện</th>
+                    <th>Tác giả</th>
+                    <th>Trạng thái</th>
+                    <th>Lượt xem</th>
+                    <th>Chapters</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for manga in mangas %}
+                <tr>
+                    <td>
+                        <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}" class="table-cover">
+                    </td>
+                    <td>
+                        <strong>{{ manga.title }}</strong><br>
+                        <small>{{ manga.alternative_title }}</small>
+                    </td>
+                    <td>{{ manga.author.name }}</td>
+                    <td>
+                        <span class="badge badge-{{ manga.status }}">
+                            {{ manga.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ manga.views }}</td>
+                    <td>
+                        <a href="{% url 'crud_chapter_list' manga.id %}">
+                            {{ manga.chapters.count }} chapters
+                        </a>
+                    </td>
+                    <td class="actions">
+                        <a href="{% url 'crud_chapter_list' manga.id %}" class="btn-small btn-info" title="Quản lý chapter">
+                            📖
+                        </a>
+                        <a href="{% url 'crud_manga_update' manga.id %}" class="btn-small btn-primary" title="Sửa">
+                            ✏️
+                        </a>
+                        <a href="{% url 'crud_manga_delete' manga.id %}" class="btn-small btn-danger" title="Xóa">
+                            🗑️
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">Chưa có truyện nào</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.crud-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.crud-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.crud-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.crud-nav a {
+    padding: 10px 20px;
+    color: #666;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+}
+
+.crud-nav a.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.crud-table {
+    background: white;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.table-cover {
+    width: 60px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-ongoing {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.badge-completed {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.badge-hiatus {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    margin: 0 2px;
+    display: inline-block;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.text-center {
+    text-align: center;
+}
+</style>
+{% endblock %}

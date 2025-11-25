@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if action == 'create' %}Thêm truyện mới{% else %}Sửa truyện{% endif %}{% endblock %}
+
+{% block content %}
+<div class="crud-form-container">
+    <h1>{% if action == 'create' %}➕ Thêm truyện mới{% else %}✏️ Sửa truyện{% endif %}</h1>
+
+    <form method="post" enctype="multipart/form-data" class="crud-form">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="title">Tên truyện <span class="required">*</span></label>
+                <input type="text" id="title" name="title" value="{{ manga.title }}" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="alternative_title">Tên khác</label>
+                <input type="text" id="alternative_title" name="alternative_title" value="{{ manga.alternative_title }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="author">Tác giả <span class="required">*</span></label>
+                <select id="author" name="author" required>
+                    <option value="">-- Chọn tác giả --</option>
+                    {% for author in authors %}
+                    <option value="{{ author.id }}"
+                            {% if manga and manga.author.id == author.id %}selected{% endif %}>
+                        {{ author.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Trạng thái <span class="required">*</span></label>
+                <select id="status" name="status" required>
+                    <option value="ongoing" {% if manga.status == 'ongoing' %}selected{% endif %}>
+                        Đang tiến hành
+                    </option>
+                    <option value="completed" {% if manga.status == 'completed' %}selected{% endif %}>
+                        Hoàn thành
+                    </option>
+                    <option value="hiatus" {% if manga.status == 'hiatus' %}selected{% endif %}>
+                        Tạm ngưng
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label>Thể loại <span class="required">*</span></label>
+                <div class="checkbox-group">
+                    {% for category in categories %}
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="categories" value="{{ category.id }}"
+                               {% if manga and category in manga.categories.all %}checked{% endif %}>
+                        {{ category.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="description">Mô tả <span class="required">*</span></label>
+                <textarea id="description" name="description" rows="8" required>{{ manga.description }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="cover_image">
+                    Ảnh bìa <span class="required">{% if action == 'create' %}*{% endif %}</span>
+                </label>
+                {% if manga and manga.cover_image %}
+                <div class="current-image">
+                    <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+                    <p>Ảnh hiện tại</p>
+                </div>
+                {% endif %}
+                <input type="file" id="cover_image" name="cover_image" accept="image/*"
+                       {% if action == 'create' %}required{% endif %}>
+                <small>Định dạng: JPG, PNG. Kích thước khuyến nghị: 300x420px</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">
+                {% if action == 'create' %}➕ Tạo truyện{% else %}💾 Lưu thay đổi{% endif %}
+            </button>
+            <a href="{% url 'crud_manga_list' %}" class="btn btn-secondary">❌ Hủy</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.crud-form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.crud-form-container h1 {
+    margin-bottom: 30px;
+}
+
+.crud-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.required {
+    color: #dc3545;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    cursor: pointer;
+}
+
+.current-image {
+    margin-bottom: 15px;
+}
+
+.current-image img {
+    max-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.current-image p {
+    margin-top: 5px;
+    color: #666;
+    font-size: 13px;
+}
+
+.form-group small {
+    margin-top: 5px;
+    color: #666;
+    font-size: 12px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-actions .btn {
+    padding: 12px 30px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
