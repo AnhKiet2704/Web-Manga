@@ -3,9 +3,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.db.models import Q, Count, Avg, Max
+from django.db.models import Q, Count, Avg, Max, F
 from django.core.paginator import Paginator
 from django.utils import timezone
+from django.db import IntegrityError, transaction
 from datetime import timedelta
 from .models import *
 
@@ -59,14 +60,30 @@ def manga_detail(request, slug):
     manga.views += 1
     manga.save(update_fields=['views'])
 
-    # Cập nhật ViewCount theo ngày
-    view_count, created = ViewCount.objects.get_or_create(
-        manga=manga,
-        date=timezone.now().date(),
-        defaults={'count': 0}
-    )
-    view_count.count += 1
-    view_count.save()
+    # Cập nhật ViewCount theo ngày - XỬ LÝ RACE CONDITION
+    try:
+        with transaction.atomic():
+            view_count, created = ViewCount.objects.get_or_create(
+                manga=manga,
+                date=timezone.now().date(),
+                defaults={'count': 0}
+            )
+            if not created:
+                # Nếu đã tồn tại, tăng count
+                ViewCount.objects.filter(
+                    manga=manga,
+                    date=timezone.now().date()
+                ).update(count=F('count') + 1)
+            else:
+                # Nếu mới tạo, set count = 1
+                view_count.count = 1
+                view_count.save()
+    except IntegrityError:
+        # Nếu vẫn bị lỗi duplicate, chỉ cần update
+        ViewCount.objects.filter(
+            manga=manga,
+            date=timezone.now().date()
+        ).update(count=F('count') + 1)
 
     # Lấy danh sách chapter
     chapters = manga.chapters.all().order_by('-chapter_number')

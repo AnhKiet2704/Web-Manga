@@ -71,7 +71,7 @@
                 <form action="/rate/{{ manga.id }}/" method="post" class="rating-form">
                     {% csrf_token %}
                     <div class="star-rating">
-                        {% for i in "12345678910" %}
+                        {% for i in "12345" %}
                         <input type="radio" name="score" value="{{ forloop.counter }}" id="star{{ forloop.counter }}">
                         <label for="star{{ forloop.counter }}">{{ forloop.counter }}</label>
                         {% endfor %}

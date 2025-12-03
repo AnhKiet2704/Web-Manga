@@ -9,8 +9,7 @@ urlpatterns = [
     path('manga/<slug:slug>/', views.manga_detail, name='manga_detail'),
 
     # Đọc truyện
-    path('manga/<slug:manga_slug>/<slug:chapter_slug>/', views.read_chapter, name='read_chapter'),
-
+    path('manga/<slug:manga_slug>/<path:chapter_slug>/', views.read_chapter, name='read_chapter'),
     # Tìm kiếm
     path('search/', views.search, name='search'),
 

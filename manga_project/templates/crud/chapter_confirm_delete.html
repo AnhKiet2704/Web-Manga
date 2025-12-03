@@ -1,26 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}Xóa truyện - {{ manga.title }}{% endblock %}
+{% block title %}Xóa chapter{% endblock %}
 
 {% block content %}
 <div class="delete-container">
     <div class="delete-box">
-        <h1>⚠️ Xác nhận xóa truyện</h1>
+        <h1>⚠️ Xác nhận xóa chapter</h1>
 
-        <div class="manga-preview">
-            <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
-            <div class="manga-details">
+        <div class="chapter-preview">
+            <div class="chapter-details">
                 <h2>{{ manga.title }}</h2>
-                <p><strong>Tác giả:</strong> {{ manga.author.name }}</p>
-                <p><strong>Số chapters:</strong> {{ manga.chapters.count }}</p>
-                <p><strong>Lượt xem:</strong> {{ manga.views }}</p>
+                <h3>Chapter {{ chapter.chapter_number }}{% if chapter.title %} - {{ chapter.title }}{% endif %}</h3>
+                <p><strong>Số trang:</strong> {{ chapter.images.count }}</p>
+                <p><strong>Lượt xem:</strong> {{ chapter.views }}</p>
+                <p><strong>Ngày tạo:</strong> {{ chapter.created_at|date:"d/m/Y H:i" }}</p>
             </div>
         </div>
 
         <div class="warning-message">
-            <p>Bạn có chắc chắn muốn xóa truyện này?</p>
+            <p>Bạn có chắc chắn muốn xóa chapter này?</p>
             <p class="warning-text">
-                ⚠️ Hành động này không thể hoàn tác. Tất cả chapters, ảnh, bình luận và dữ liệu liên quan sẽ bị xóa vĩnh viễn!
+                ⚠️ Hành động này không thể hoàn tác. Tất cả ảnh và dữ liệu liên quan sẽ bị xóa vĩnh viễn!
             </p>
         </div>
 
@@ -28,7 +28,7 @@
             {% csrf_token %}
             <div class="form-actions">
                 <button type="submit" class="btn btn-danger">🗑️ Xác nhận xóa</button>
-                <a href="{% url 'crud_manga_list' %}" class="btn btn-secondary">❌ Hủy</a>
+                <a href="{% url 'crud_chapter_list' manga.id %}" class="btn btn-secondary">❌ Hủy</a>
             </div>
         </form>
     </div>
@@ -47,6 +47,7 @@
     padding: 40px;
     border-radius: 8px;
     max-width: 600px;
+    width: 100%;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -56,28 +57,26 @@
     color: #dc3545;
 }
 
-.manga-preview {
-    display: flex;
-    gap: 20px;
+.chapter-preview {
     padding: 20px;
     background: #f8f9fa;
     border-radius: 8px;
     margin-bottom: 20px;
 }
 
-.manga-preview img {
-    width: 120px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-.manga-details h2 {
+.chapter-details h2 {
     margin-bottom: 10px;
     font-size: 20px;
+    color: #333;
 }
 
-.manga-details p {
+.chapter-details h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #007bff;
+}
+
+.chapter-details p {
     margin: 5px 0;
     color: #666;
 }
@@ -105,10 +104,11 @@
 }
 
 .btn {
+    text-decoration: none;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    text-decoration: none;
+    font-size: 14px;
     display: inline-block;
 }
 

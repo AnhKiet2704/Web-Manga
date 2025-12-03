@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} - Thể loại{% endblock %}
+
+{% block content %}
+<div class="category-page">
+    <div class="category-header">
+        <h1>📂 {{ category.name }}</h1>
+        {% if category.description %}
+        <p class="category-description">{{ category.description }}</p>
+        {% endif %}
+        <p class="manga-count">Tổng: {{ mangas.paginator.count }} truyện</p>
+    </div>
+
+    <div class="manga-grid">
+        {% for manga in mangas %}
+        <div class="manga-card">
+            <a href="/manga/{{ manga.slug }}/">
+                <div class="manga-cover">
+                    <img src="{{ manga.cover_image.url }}" alt="{{ manga.title }}">
+                    <div class="manga-overlay">
+                        <span class="views">👁 {{ manga.views }}</span>
+                    </div>
+                </div>
+                <div class="manga-info">
+                    <h3 class="manga-title">{{ manga.title }}</h3>
+                    <p class="manga-author">{{ manga.author.name }}</p>
+                    <p class="manga-updated">{{ manga.updated_at|date:"d/m/Y" }}</p>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <p class="no-results">Chưa có truyện nào thuộc thể loại này.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if mangas.has_other_pages %}
+    <div class="pagination">
+        {% if mangas.has_previous %}
+        <a href="?page={{ mangas.previous_page_number }}" class="page-link">← Trước</a>
+        {% endif %}
+        
+        <span class="page-current">
+            Trang {{ mangas.number }} / {{ mangas.paginator.num_pages }}
+        </span>
+        
+        {% if mangas.has_next %}
+        <a href="?page={{ mangas.next_page_number }}" class="page-link">Sau →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.category-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.category-header {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.category-header h1 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.category-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.manga-count {
+    color: #999;
+    font-size: 14px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px;
+    color: #666;
+    font-size: 18px;
+    background: white;
+    border-radius: 8px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.page-link {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.page-link:hover {
+    background: #0056b3;
+}
+
+.page-current {
+    color: #666;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
