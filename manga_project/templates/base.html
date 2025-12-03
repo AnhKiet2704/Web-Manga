@@ -23,7 +23,7 @@
     <a href="/search/">Tìm kiếm</a>
     {% if user.is_authenticated %}
         {% if user.is_staff %}
-        <a href="/crud/manga/">⚙️ Quản lý</a>
+        <a href="/crud/manga/"> Quản lý</a>
         {% endif %}
         <a href="/user/following/">Theo dõi</a>
         <a href="/user/history/">Lịch sử</a>
@@ -75,8 +75,6 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Manga Website. All rights reserved.</p>
-            <p>Thiết kế bởi Django + HTML/CSS thuần</p>
         </div>
     </footer>
 

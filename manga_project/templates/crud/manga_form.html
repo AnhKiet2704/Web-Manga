@@ -11,7 +11,7 @@
 
         <div class="form-row">
             <div class="form-group full-width">
-                <label for="title">Tên truyện <span class="required">*</span></label>
+                <label for="title">Tên truyện </label>
                 <input type="text" id="title" name="title" value="{{ manga.title }}" required>
             </div>
         </div>
@@ -25,7 +25,7 @@
 
         <div class="form-row">
             <div class="form-group">
-                <label for="author">Tác giả <span class="required">*</span></label>
+                <label for="author">Tác giả </label>
                 <select id="author" name="author" required>
                     <option value="">-- Chọn tác giả --</option>
                     {% for author in authors %}

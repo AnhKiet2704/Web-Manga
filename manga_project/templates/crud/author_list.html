@@ -1,0 +1,152 @@
+<!-- author_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Quản lý tác giả{% endblock %}
+
+{% block content %}
+<div class="crud-container">
+    <div class="crud-header">
+        <h1>✍️ Quản lý tác giả</h1>
+        <a href="{% url 'crud_author_create' %}" class="btn btn-success">➕ Thêm tác giả mới</a>
+    </div>
+
+    <div class="crud-nav">
+        <a href="{% url 'crud_manga_list' %}">Truyện</a>
+        <a href="{% url 'crud_category_list' %}">Thể loại</a>
+        <a href="{% url 'crud_author_list' %}" class="active">Tác giả</a>
+    </div>
+
+    <div class="crud-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên tác giả</th>
+                    <th>Slug</th>
+                    <th>Số truyện</th>
+                    <th>Tiểu sử</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for author in authors %}
+                <tr>
+                    <td><strong>{{ author.name }}</strong></td>
+                    <td><code>{{ author.slug }}</code></td>
+                    <td>{{ author.manga_set.count }} truyện</td>
+                    <td>{{ author.bio|truncatewords:10|default:"-" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'crud_author_update' author.id %}"
+                           class="btn-small btn-primary"
+                           title="Sửa">✏️</a>
+                        <a href="{% url 'crud_author_delete' author.id %}"
+                           class="btn-small btn-danger"
+                           title="Xóa">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Chưa có tác giả nào</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.crud-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.crud-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.crud-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.crud-nav a {
+    padding: 10px 20px;
+    color: #666;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+}
+
+.crud-nav a.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.crud-table {
+    background: white;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.btn, .btn-small {
+    padding: 5px 10px;
+    margin: 0 2px;
+    display: inline-block;
+    border-radius: 3px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.text-center {
+    text-align: center;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+</style>
+{% endblock %}

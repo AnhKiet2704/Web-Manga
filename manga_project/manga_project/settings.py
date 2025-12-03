@@ -16,7 +16,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'manga',  # App chính
+    'manga',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'manga_db',
         'USER': 'root',
-        'PASSWORD': '123456789',  # Thay đổi
+        'PASSWORD': '123456789',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {

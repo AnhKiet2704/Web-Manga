@@ -8,7 +8,7 @@
         <div>
             <a href="{% url 'crud_manga_list' %}" class="back-link">← Quay lại danh sách truyện</a>
             <h1>📖 Quản lý chapter: {{ manga.title }}</h1>
-        </div>
+        </div >
         <a href="{% url 'crud_chapter_create' manga.id %}" class="btn btn-success">➕ Thêm chapter mới</a>
     </div>
 
@@ -106,6 +106,12 @@
 .manga-info-box p {
     color: #666;
     margin: 5px 0;
+}
+    *
+ {
+    margin: 1px;
+    padding: 2px;
+    box-sizing: border-box;
 }
 </style>
 {% endblock %}

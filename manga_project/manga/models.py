@@ -29,7 +29,13 @@ class Author(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Author.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -45,7 +51,6 @@ class Manga(models.Model):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
-    alternative_title = models.CharField(max_length=255, blank=True)
     alternative_title = models.CharField(max_length=255, blank=True)
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
     categories = models.ManyToManyField(Category, related_name='mangas')
@@ -67,7 +72,13 @@ class Manga(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Manga.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
     def get_latest_chapters(self, count=3):
@@ -95,7 +106,8 @@ class Chapter(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = f"{self.manga.slug}-chapter-{self.chapter_number}"
+            base_slug = f"{self.manga.slug}-chapter-{self.chapter_number}"
+            self.slug = base_slug.replace('.', '-')
         super().save(*args, **kwargs)
 
     def get_next_chapter(self):
