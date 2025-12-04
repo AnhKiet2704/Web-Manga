@@ -7,8 +7,8 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f5f5;
-    color: #333;
+    background: #071422; /* dark navy */
+    color: #dcefff; /* light text */
     line-height: 1.6;
 }
 
@@ -20,17 +20,17 @@ body {
 
 a {
     text-decoration: none;
-    color: #007bff;
+    color: #9ed0ff;
 }
 
 a:hover {
-    color: #0056b3;
+    color: #e6f6ff;
 }
 
 /* Header */
 .header {
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: linear-gradient(180deg, #071824 0%, #081826 100%);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -46,81 +46,99 @@ a:hover {
 }
 
 .logo h1 {
-    font-size: 24px;
-    color: #ff6b6b;
+    font-size: 22px;
+    color: #eaf6ff;
+    margin: 0;
 }
 
 .main-nav {
     display: flex;
-    gap: 20px;
+    gap: 18px;
 }
 
 .main-nav a {
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s;
+    color: #cfeaff;
+    font-weight: 600;
+    transition: color 0.2s;
+    padding: 6px 8px;
+    border-radius: 6px;
 }
 
 .main-nav a:hover {
-    color: #ff6b6b;
+    color: #ffffff;
+    background: rgba(255,255,255,0.03);
 }
 
 .search-box form {
     display: flex;
+    align-items: center;
 }
 
 .search-box input {
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    border-radius: 20px 0 0 20px;
-    width: 250px;
+    padding: 9px 16px;
+    border: none;
+    background: rgba(255,255,255,0.04);
+    color: #eaf6ff;
+    border-radius: 24px 0 0 24px;
+    width: 280px;
+}
+
+.search-box input::placeholder {
+    color: rgba(230,250,255,0.45);
 }
 
 .search-box button {
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    border-left: none;
-    border-radius: 0 20px 20px 0;
-    background: #fff;
+    padding: 9px 14px;
+    border: none;
+    background: linear-gradient(180deg,#1e82c7,#186da6);
+    color: white;
+    border-radius: 0 24px 24px 0;
     cursor: pointer;
-    transition: background 0.3s;
 }
 
 .search-box button:hover {
-    background: #f5f5f5;
+    filter: brightness(1.05);
 }
 
 .user-menu {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
+}
+
+.user-menu a.button {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    color: #eaf6ff;
+}
+
+.user-menu a.primary {
+    background: linear-gradient(180deg,#2b98d6,#1b6fa3);
+    color: #fff;
 }
 
 /* Messages */
 .messages {
-    background: #d4edda;
-    padding: 10px 0;
+    background: transparent;
+    padding: 12px 0;
 }
 
 .message {
     padding: 10px;
-    border-radius: 5px;
-    margin: 5px 0;
+    border-radius: 6px;
+    margin: 6px 0;
+    color: #e9f7ff;
+    background: rgba(255,255,255,0.02);
 }
 
-.message.success {
-    background: #d4edda;
-    color: #155724;
-}
-
-.message.error {
-    background: #f8d7da;
-    color: #721c24;
-}
+.message.success { background: rgba(40,167,69,0.12); color: #bfe9c7; }
+.message.error { background: rgba(220,53,69,0.12); color: #f6b8be; }
 
 /* Main Content */
 .main-content {
-    padding: 30px 0;
+    padding: 28px 0;
     min-height: calc(100vh - 200px);
 }
 
@@ -133,23 +151,18 @@ a:hover {
 
 /* Banner */
 .banner {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 60px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    color: #eaf6ff;
+    padding: 40px 30px;
     border-radius: 10px;
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: left;
+    margin-bottom: 24px;
 }
 
-.banner h2 {
-    font-size: 36px;
-    margin-bottom: 10px;
-}
+.banner h2 { font-size: 28px; margin-bottom: 8px; }
 
 /* Manga Grid */
-.manga-section {
-    margin-bottom: 40px;
-}
+.manga-section { margin-bottom: 36px; }
 
 .section-header {
     display: flex;
@@ -169,28 +182,27 @@ a:hover {
 
 .manga-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
 }
 
 .manga-card {
-    background: white;
-    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 24px rgba(2,6,23,0.6);
+    transition: transform 0.22s, box-shadow 0.22s;
+    border: 1px solid rgba(255,255,255,0.03);
 }
 
-.manga-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+.manga-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(2,6,23,0.7); }
 
 .manga-cover {
     position: relative;
     width: 100%;
-    padding-top: 140%;
+    padding-top: 125%;
     overflow: hidden;
+    background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.08));
 }
 
 .manga-cover img {
@@ -207,50 +219,30 @@ a:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    background: linear-gradient(to top, rgba(2,6,23,0.9), rgba(2,6,23,0.25));
     padding: 10px;
-    color: white;
+    color: #eaf6ff;
 }
 
-.manga-info {
-    padding: 10px;
-}
+.manga-info { padding: 12px; }
 
 .manga-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #333;
+    color: #eaf6ff;
 }
 
-.manga-chapters, .manga-updated {
-    font-size: 12px;
-    color: #666;
-}
+.manga-chapters, .manga-updated { font-size: 13px; color: #9fc8e6; }
 
 /* Tabs */
-.tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
+.tabs { display: flex; gap: 10px; margin-bottom: 20px; }
 
-.tab-btn {
-    padding: 10px 20px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.tab-btn.active {
-    background: #007bff;
-    color: white;
-}
+.tab-btn { padding: 9px 18px; border: none; background: rgba(255,255,255,0.02); cursor: pointer; border-radius: 6px; }
+.tab-btn.active { background: #1f6fb3; color: #fff; }
 
 .tab-content {
     display: none;
@@ -261,11 +253,7 @@ a:hover {
 }
 
 /* Top List */
-.top-list {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-}
+.top-list { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius: 8px; padding: 18px; }
 
 .top-item {
     display: flex;
@@ -304,18 +292,9 @@ a:hover {
 }
 
 /* Sidebar */
-.sidebar {
-    position: sticky;
-    top: 80px;
-    height: fit-content;
-}
+.sidebar { position: sticky; top: 80px; height: fit-content; }
 
-.sidebar-section {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
+.sidebar-section { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding: 18px; border-radius: 8px; margin-bottom: 20px; }
 
 .sidebar-section h3 {
     margin-bottom: 15px;
@@ -344,11 +323,7 @@ a:hover {
 }
 
 /* Manga Detail */
-.manga-detail {
-    background: white;
-    border-radius: 8px;
-    padding: 30px;
-}
+.manga-detail { background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); border-radius: 8px; padding: 26px; }
 
 .manga-info-section {
     display: grid;
@@ -357,22 +332,11 @@ a:hover {
     margin-bottom: 30px;
 }
 
-.manga-cover-large img {
-    width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+.manga-cover-large img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(2,6,23,0.6); }
 
-.manga-title-large {
-    font-size: 28px;
-    margin-bottom: 10px;
-}
+.manga-title-large { font-size: 26px; margin-bottom: 8px; color: #eaf6ff; }
 
-.alt-title {
-    color: #666;
-    font-style: italic;
-    margin-bottom: 20px;
-}
+.alt-title { color: #9fc8e6; font-style: italic; margin-bottom: 16px; }
 
 .manga-meta {
     display: flex;
@@ -381,29 +345,20 @@ a:hover {
     margin-bottom: 20px;
 }
 
+5A9DCF
+0A1725
 .meta-item {
     display: flex;
     gap: 10px;
 }
 
-.meta-item .label {
-    font-weight: bold;
-    min-width: 100px;
-}
+.meta-item .label { font-weight: 700; min-width: 100px; color: #cfeaff; }
 
 .manga-categories {
     margin-bottom: 20px;
 }
 
-.category-tag {
-    display: inline-block;
-    padding: 5px 12px;
-    background: #e3f2fd;
-    color: #1976d2;
-    border-radius: 15px;
-    margin: 5px 5px 5px 0;
-    font-size: 13px;
-}
+.category-tag { display: inline-block; padding: 5px 12px; background: rgba(255,255,255,0.03); color: #bfe9ff; border-radius: 15px; margin: 5px 5px 5px 0; font-size: 13px; }
 
 .manga-actions {
     display: flex;
@@ -424,20 +379,9 @@ a:hover {
     opacity: 0.9;
 }
 
-.btn-primary {
-    background: #007bff;
-    color: white;
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-}
-
-.btn-success {
-    background: #28a745;
-    color: white;
-}
+.btn-primary { background: linear-gradient(180deg,#2b98d6,#1b6fa3); color: white; }
+.btn-secondary { background: rgba(255,255,255,0.04); color: #eaf6ff; }
+.btn-success { background: linear-gradient(180deg,#2cb573,#238a56); color: white; }
 
 .btn-full {
     width: 100%;
@@ -448,28 +392,13 @@ a:hover {
     margin-bottom: 30px;
 }
 
-.chapter-list {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 10px;
-}
+.chapter-list { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 10px; }
 
-.chapter-item {
-    background: white;
-    margin-bottom: 5px;
-    border-radius: 5px;
-}
 
-.chapter-item a {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 15px;
-    color: #333;
-}
+.chapter-item { background: rgba(255,255,255,0.02); margin-bottom: 8px; border-radius: 8px; }
 
-.chapter-item:hover {
-    background: #e3f2fd;
-}
+.chapter-item a { display: flex; justify-content: space-between; padding: 12px 15px; color: #dbeffd; }
+.chapter-item:hover { background: rgba(255,255,255,0.02); }
 
 .chapter-meta {
     display: flex;
@@ -496,12 +425,7 @@ a:hover {
     margin-top: 20px;
 }
 
-.comment-item {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
+.comment-item { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; margin-bottom: 10px; }
 
 .comment-header {
     display: flex;
@@ -581,20 +505,16 @@ a:hover {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .home-layout {
-        grid-template-columns: 1fr;
-    }
+    .home-layout { grid-template-columns: 1fr; }
 
-    .manga-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
+    .manga-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
 
-    .manga-info-section {
-        grid-template-columns: 1fr;
-    }
+    .manga-info-section { grid-template-columns: 1fr; }
 
-    .header-content {
-        flex-direction: column;
-        gap: 10px;
-    }
+    .header-content { flex-direction: column; gap: 10px; }
 }
+
+/* Filter bar (listing pages) */
+.filter-bar { display:flex; gap:12px; align-items:center; margin: 18px 0 22px; }
+.filter-bar .filter-input { padding:10px 12px; background: rgba(255,255,255,0.02); border-radius:8px; color:#dff3ff; border:1px solid rgba(255,255,255,0.02); }
+.filter-bar .filter-btn { padding:10px 16px; background: linear-gradient(180deg,#2b98d6,#1b6fa3); color:#fff; border-radius:8px; border:none; }
