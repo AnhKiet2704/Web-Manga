@@ -55,7 +55,7 @@
 
         <div class="form-row">
             <div class="form-group full-width">
-                <label>Thể loại <span class="required">*</span></label>
+                <label>Thể loại </label>
                 <div class="checkbox-group">
                     {% for category in categories %}
                     <label class="checkbox-label">
@@ -70,8 +70,8 @@
 
         <div class="form-row">
             <div class="form-group full-width">
-                <label for="description">Mô tả <span class="required">*</span></label>
-                <textarea id="description" name="description" rows="8" required>{{ manga.description }}</textarea>
+                <label for="description">Mô tả </label>
+                <textarea id="description" name="description" rows="8" >{{ manga.description }}</textarea>
             </div>
         </div>
 
